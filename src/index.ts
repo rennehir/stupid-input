@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+import yargs from 'yargs/yargs';
+import { hideBin } from 'yargs/helpers';
 import launchpad from 'launchpadder';
 import terminalArt from 'terminal-art';
 
@@ -14,6 +16,19 @@ const testChar = [
   [0xFF0000FF, 0xFF0000FF, 0xFF0000FF, 0x0000FFFF, 0x0000FFFF, 0xFF0000FF, 0xFF0000FF, 0xFF0000FF],
   [0xFF0000FF, 0xFF0000FF, 0xFF0000FF, 0x0000FFFF, 0x0000FFFF, 0xFF0000FF, 0xFF0000FF, 0xFF0000FF],
 ];
+
+const argv = yargs(hideBin(process.argv))
+  .usage('Usage: $0 [options]')
+  .option('p', {
+    alias: 'path',
+    demandOption: false,
+    describe: 'The location of the pad mapping file',
+    type: 'string',
+  })
+  .help('h')
+  .alias('h', 'help').argv;
+
+console.log(argv);
 
 console.log(launchpad);
 const ERROR_TITS_URL =
