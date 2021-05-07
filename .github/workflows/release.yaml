@@ -21,7 +21,7 @@ jobs:
         run: npm ci
       - run: npm run build
       - name: Release
+        uses: mikeal/merge-release@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npx semantic-release
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
