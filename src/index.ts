@@ -10,6 +10,8 @@ enum BUTTONS {
   MOUSE = 96,
 }
 
+let mode: 'keyboard' | 'mouse' = 'keyboard';
+
 const currentColor = 5;
 
 const generateGrid = () => {
@@ -53,7 +55,14 @@ launchpad.on('buttonDown', (event) => {
   const { pad, type } = event;
 
   if (type == 'pad') {
-    // Handle pad press
+    if (mode == 'keyboard') {
+      // Do keyboard stuff
+    }
+
+    if (mode == 'mouse') {
+      // Do mouse stuff
+    }
+
     const coord = event.cor;
     const y = coord[0] - 1;
     const x = coord[1] - 1;
@@ -65,8 +74,6 @@ launchpad.on('buttonDown', (event) => {
   if (pad == BUTTONS.SUBMIT) {
     matprint(grid);
     const match = compareGrid(grid, testChar);
-
-    console.log(launchpad.led.keys);
 
     if (match) {
       console.log(
@@ -84,6 +91,18 @@ launchpad.on('buttonDown', (event) => {
     launchpad.led.clear();
     setupPad();
   }
+
+  if (pad == BUTTONS.KEYBOARD) {
+    mode = 'keyboard';
+    launchpad.led.pulse(BUTTONS.KEYBOARD, 5);
+    launchpad.led.off(BUTTONS.MOUSE);
+  }
+
+  if (pad == BUTTONS.MOUSE) {
+    mode = 'mouse';
+    launchpad.led.pulse(BUTTONS.MOUSE, 5);
+    launchpad.led.off(BUTTONS.KEYBOARD);
+  }
 });
 
 launchpad.connect(1, 1);
@@ -93,7 +112,7 @@ const togglePad = (arrayIndex, pad) => {
 };
 
 const setupPad = () => {
-  launchpad.led.on(BUTTONS.SUBMIT, 66);
+  launchpad.led.on(BUTTONS.SUBMIT, 21);
   launchpad.led.on(BUTTONS.CLEAR, 3);
 };
 
