@@ -10,7 +10,7 @@
     "test": "echo \"Error: no testing needed because we know how to code\" && exit 1",
     "lint": "eslint src/**/*.ts",
     "format": "eslint src/**/*.ts --fix",
-    "build": "tsc -p .",
+    "build": "tsc",
     "dev": "nodemon",
     "local": "sudo npm i -g && stupid-input"
   },
