@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import * as launchpad from 'launchpadder';
+import launchpad from 'launchpadder';
 
 console.log(launchpad);
 
