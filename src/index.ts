@@ -56,7 +56,6 @@ const compareGrid = (grid1, grid2) => {
 };
 
 launchpad.on('buttonDown', async (event) => {
-  console.log(event);
   const { pad, type } = event;
 
   if (type == 'pad') {
