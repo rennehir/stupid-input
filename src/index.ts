@@ -10,8 +10,6 @@ enum BUTTONS {
   MOUSE = 96,
 }
 
-const mouse = new Mouse();
-
 const currentColor = 5;
 
 const generateGrid = () => {
