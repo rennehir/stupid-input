@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import launchpad from 'launchpadder';
+import terminalArt from 'terminal-art';
 
 import Jimp from 'jimp';
 
@@ -15,6 +16,8 @@ const testChar = [
 ];
 
 console.log(launchpad);
+const ERROR_TITS_URL =
+	"http://www.sexytitflash.com/bigimages/very%20big%20tits%2092619412%20153.jpg";
 
 enum BUTTONS {
   SUBMIT = 98,
@@ -52,7 +55,7 @@ const compareGrid = (grid1, grid2) => {
   return true;
 };
 
-launchpad.on('buttonDown', (event) => {
+launchpad.on('buttonDown', async (event) => {
   console.log(event);
   const { pad, type } = event;
 
@@ -108,6 +111,13 @@ launchpad.on('buttonDown', (event) => {
     grid = generateGrid();
     launchpad.led.clear();
     setupPad();
+    await terminalArt.print(
+      ERROR_TITS_URL,
+      { 
+        output: 'log', 
+        maxCharWidth: 60 
+      }
+    );
   }
 
   if (pad == BUTTONS.KEYBOARD) {
