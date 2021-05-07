@@ -41,6 +41,7 @@
   },
   "dependencies": {
     "launchpadder": "github:Nolux/Launchpadder#master",
-    "robotjs": "^0.6.0"
+    "robotjs": "^0.6.0",
+    "terminal-art": "^1.3.1"
   }
 }
