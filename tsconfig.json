@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "baseUrl": "src",
     "target": "es5",
     "module": "commonjs",
     "sourceMap": true,
@@ -8,6 +7,11 @@
     "esModuleInterop": true,
     "rootDir": "src",
     "outDir": "dist",
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ES2015"
+    ]
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]
