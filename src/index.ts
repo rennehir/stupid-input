@@ -1,13 +1,8 @@
-// boop
-console.log(
-  '@@@ @@@@@@@  @@  @@@@@@       @@@@@@       @@@@@@@@@@   @@@@@@  @@@@@@@  @@@@@@@ @@@  @@@ @@@\n@@!   @@!   !@  !@@          @@!  @@@      @@! @@! @@! @@!  @@@   @@!   !@@      @@!  @@@ @@@\n!!@   @!!        !@@!!       @!@!@!@!      @!! !!@ @!@ @!@!@!@!   @!!   !@!      @!@!@!@! !@!\n!!:   !!:           !:!      !!:  !!!      !!:     !!: !!:  !!!   !!:   :!!      !!:  !!!    \n:      :        ::.: :        :   : :       :      :    :   : :    :     :: :: :  :   : : :.:\n                                                                                             \n',
-);
-
 import * as launchpad from 'launchpadder';
 
 console.log(launchpad);
 
-let currentColor = 5;
+const currentColor = 5;
 
 const generateGrid = () => {
   const arr = [];
@@ -20,7 +15,30 @@ const generateGrid = () => {
   return arr;
 };
 
+const testChar = [
+  [false, false, false, true, true, false, false, false],
+  [false, false, true, true, true, true, false, false],
+  [false, true, true, true, true, true, true, false],
+  [true, true, false, true, true, false, true, true],
+  [true, false, false, true, true, false, false, true],
+  [false, false, false, true, true, false, false, false],
+  [false, false, false, true, true, false, false, false],
+  [false, false, false, true, true, false, false, false],
+];
+
 let grid = generateGrid();
+
+const compareGrid = (grid1, grid2) => {
+  for (let i = 0; i < 8; i++) {
+    for (let j = 0; j < 8; j++) {
+      if (grid1[i][j] != grid2[i][j]) {
+        return false;
+      }
+    }
+  }
+
+  return true;
+};
 
 launchpad.on('connected', (e) => {
   // Setup panel
@@ -31,7 +49,7 @@ launchpad.on('connected', (e) => {
 launchpad.on('buttonDown', (event) => {
   console.log(event);
   const { pad, type } = event;
-  if (event.type == 'pad') {
+  if (type == 'pad') {
     const coord = event.cor;
     const y = coord[0] - 1;
     const x = coord[1] - 1;
@@ -41,7 +59,13 @@ launchpad.on('buttonDown', (event) => {
   }
 
   if (pad == 98) {
-    console.log(grid);
+    const match = compareGrid(grid, testChar);
+
+    if (match) {
+      console.log(
+        '@@@ @@@@@@@  @@  @@@@@@       @@@@@@       @@@@@@@@@@   @@@@@@  @@@@@@@  @@@@@@@ @@@  @@@ @@@\n@@!   @@!   !@  !@@          @@!  @@@      @@! @@! @@! @@!  @@@   @@!   !@@      @@!  @@@ @@@\n!!@   @!!        !@@!!       @!@!@!@!      @!! !!@ @!@ @!@!@!@!   @!!   !@!      @!@!@!@! !@!\n!!:   !!:           !:!      !!:  !!!      !!:     !!: !!:  !!!   !!:   :!!      !!:  !!!    \n:      :        ::.: :        :   : :       :      :    :   : :    :     :: :: :  :   : : :.:\n                                                                                             \n',
+      );
+    }
   }
 
   if (pad == 91) {
