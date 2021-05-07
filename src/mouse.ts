@@ -5,11 +5,6 @@ type MousePosition = {
   y: number;
 };
 
-type Size = {
-  height: number;
-  width: number;
-};
-
 export default class Mouse {
   private currentPosition: MousePosition;
 
