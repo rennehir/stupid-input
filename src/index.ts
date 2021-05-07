@@ -7,8 +7,10 @@ import Jimp from 'jimp';
 
 import { BUTTONS } from './types';
 import Mode, { MODE } from './mode';
+import Mouse from './mouse';
 
 const mode = new Mode(launchpad);
+const mouse = new Mouse();
 
 const testChar = [
   [0xff0000ff, 0xff0000ff, 0xff0000ff, 0x0000ffff, 0x0000ffff, 0xff0000ff, 0xff0000ff, 0xff0000ff],
@@ -69,25 +71,40 @@ launchpad.on('buttonDown', async (event) => {
   const { pad, type } = event;
 
   if (type == 'pad') {
-    if (mode.currentMode === MODE.keyboard) {
-      // Do keyboard stuff
+    switch (mode.currentMode) {
+      case MODE.keyboard: {
+        // Do keyboard stuff
+        const coord = event.cor;
+        const y = coord[0] - 1;
+        const x = coord[1] - 1;
+        grid[7 - y][x] = !grid[7 - y][x];
+
+        togglePad(event.arrayIndex, pad);
+        break;
+      }
+      case MODE.mouse: {
+        // Do mouse stuff
+        mouse.moveToCell(event.cor);
+        break;
+      }
+      case MODE.custom: {
+        // Do custom stuff
+        break;
+      }
+
+      default: {
+        break;
+      }
     }
-
-    if (mode.currentMode === MODE.mouse) {
-      // Do mouse stuff
-    }
-
-    if (mode.currentMode === MODE.custom) {
-      // Do custom stuff
-    }
-
-    const coord = event.cor;
-    const y = coord[0] - 1;
-    const x = coord[1] - 1;
-    grid[7 - y][x] = !grid[7 - y][x];
-
-    togglePad(event.arrayIndex, pad);
   }
+
+  if (pad === BUTTONS.UP) mouse.move(0, 10);
+  if (pad === BUTTONS.DOWN) mouse.move(0, -10);
+  if (pad === BUTTONS.LEFT) mouse.move(-10, 0);
+  if (pad === BUTTONS.RIGHT) mouse.move(10, 0);
+
+  if (pad === BUTTONS.MOUSE_LEFT) mouse.click('left');
+  if (pad === BUTTONS.MOUSE_RIGHT) mouse.click('right');
 
   if (pad == BUTTONS.SUBMIT) {
     matprint(grid);

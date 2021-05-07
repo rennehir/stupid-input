@@ -22,6 +22,7 @@ export default class Mode {
   }
 
   private setModeLights(mode: MODE): void {
+    this.launchpad.led.clear();
     switch (mode) {
       case MODE.keyboard:
         this.launchpad.led.pulse(BUTTONS.KEYBOARD, 21);
