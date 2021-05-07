@@ -1,12 +1,8 @@
 #!/usr/bin/env node
-
 import launchpad from 'launchpadder';
-
-import Mouse from './mouse';
 
 console.log(launchpad);
 
-const mouse = new Mouse();
 const currentColor = 5;
 
 const generateGrid = () => {
