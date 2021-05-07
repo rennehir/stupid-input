@@ -1,6 +1,33 @@
 #!/usr/bin/env node
 import launchpad from 'launchpadder';
 
+import Jimp from 'jimp';
+
+const testChar = [
+  [0xFF0000FF, 0xFF0000FF, 0xFF0000FF, 0x0000FFFF, 0x0000FFFF, 0xFF0000FF, 0xFF0000FF, 0xFF0000FF],
+  [0xFF0000FF, 0xFF0000FF, 0x0000FFFF, 0x0000FFFF, 0x0000FFFF, 0x0000FFFF, 0xFF0000FF, 0xFF0000FF],
+  [0xFF0000FF, 0x0000FFFF, 0x0000FFFF, 0x0000FFFF, 0x0000FFFF, 0x0000FFFF, 0x0000FFFF, 0xFF0000FF],
+  [0x0000FFFF, 0x0000FFFF, 0xFF0000FF, 0x0000FFFF, 0x0000FFFF, 0xFF0000FF, 0x0000FFFF, 0x0000FFFF],
+  [0x0000FFFF, 0xFF0000FF, 0xFF0000FF, 0x0000FFFF, 0x0000FFFF, 0xFF0000FF, 0xFF0000FF, 0x0000FFFF],
+  [0xFF0000FF, 0xFF0000FF, 0xFF0000FF, 0x0000FFFF, 0x0000FFFF, 0xFF0000FF, 0xFF0000FF, 0xFF0000FF],
+  [0xFF0000FF, 0xFF0000FF, 0xFF0000FF, 0x0000FFFF, 0x0000FFFF, 0xFF0000FF, 0xFF0000FF, 0xFF0000FF],
+  [0xFF0000FF, 0xFF0000FF, 0xFF0000FF, 0x0000FFFF, 0x0000FFFF, 0xFF0000FF, 0xFF0000FF, 0xFF0000FF],
+];
+
+const image = new Jimp(8,8, function (err, image) {
+  if (err) throw err;
+
+  testChar.forEach((row, y) => {
+    row.forEach((color, x) => {
+      image.setPixelColor(color, x, y);
+    })
+  })
+
+  image.write('test.png', (err) => {
+    if (err) throw err;
+  })
+});
+
 console.log(launchpad);
 
 const currentColor = 5;
@@ -15,17 +42,6 @@ const generateGrid = () => {
   }
   return arr;
 };
-
-const testChar = [
-  [false, false, false, true, true, false, false, false],
-  [false, false, true, true, true, true, false, false],
-  [false, true, true, true, true, true, true, false],
-  [true, true, false, true, true, false, true, true],
-  [true, false, false, true, true, false, false, true],
-  [false, false, false, true, true, false, false, false],
-  [false, false, false, true, true, false, false, false],
-  [false, false, false, true, true, false, false, false],
-];
 
 let grid = generateGrid();
 
