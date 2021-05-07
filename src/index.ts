@@ -1,32 +1,42 @@
 #!/usr/bin/env node
+import yargs from 'yargs/yargs';
+import { hideBin } from 'yargs/helpers';
 import launchpad from 'launchpadder';
 import terminalArt from 'terminal-art';
-
 import Jimp from 'jimp';
 
+import { BUTTONS } from './types';
+import Mode, { MODE } from './mode';
+import Mouse from './mouse';
+
+const mode = new Mode(launchpad);
+const mouse = new Mouse();
+
 const testChar = [
-  [0xFF0000FF, 0xFF0000FF, 0xFF0000FF, 0x0000FFFF, 0x0000FFFF, 0xFF0000FF, 0xFF0000FF, 0xFF0000FF],
-  [0xFF0000FF, 0xFF0000FF, 0x0000FFFF, 0x0000FFFF, 0x0000FFFF, 0x0000FFFF, 0xFF0000FF, 0xFF0000FF],
-  [0xFF0000FF, 0x0000FFFF, 0x0000FFFF, 0x0000FFFF, 0x0000FFFF, 0x0000FFFF, 0x0000FFFF, 0xFF0000FF],
-  [0x0000FFFF, 0x0000FFFF, 0xFF0000FF, 0x0000FFFF, 0x0000FFFF, 0xFF0000FF, 0x0000FFFF, 0x0000FFFF],
-  [0x0000FFFF, 0xFF0000FF, 0xFF0000FF, 0x0000FFFF, 0x0000FFFF, 0xFF0000FF, 0xFF0000FF, 0x0000FFFF],
-  [0xFF0000FF, 0xFF0000FF, 0xFF0000FF, 0x0000FFFF, 0x0000FFFF, 0xFF0000FF, 0xFF0000FF, 0xFF0000FF],
-  [0xFF0000FF, 0xFF0000FF, 0xFF0000FF, 0x0000FFFF, 0x0000FFFF, 0xFF0000FF, 0xFF0000FF, 0xFF0000FF],
-  [0xFF0000FF, 0xFF0000FF, 0xFF0000FF, 0x0000FFFF, 0x0000FFFF, 0xFF0000FF, 0xFF0000FF, 0xFF0000FF],
+  [0xff0000ff, 0xff0000ff, 0xff0000ff, 0x0000ffff, 0x0000ffff, 0xff0000ff, 0xff0000ff, 0xff0000ff],
+  [0xff0000ff, 0xff0000ff, 0x0000ffff, 0x0000ffff, 0x0000ffff, 0x0000ffff, 0xff0000ff, 0xff0000ff],
+  [0xff0000ff, 0x0000ffff, 0x0000ffff, 0x0000ffff, 0x0000ffff, 0x0000ffff, 0x0000ffff, 0xff0000ff],
+  [0x0000ffff, 0x0000ffff, 0xff0000ff, 0x0000ffff, 0x0000ffff, 0xff0000ff, 0x0000ffff, 0x0000ffff],
+  [0x0000ffff, 0xff0000ff, 0xff0000ff, 0x0000ffff, 0x0000ffff, 0xff0000ff, 0xff0000ff, 0x0000ffff],
+  [0xff0000ff, 0xff0000ff, 0xff0000ff, 0x0000ffff, 0x0000ffff, 0xff0000ff, 0xff0000ff, 0xff0000ff],
+  [0xff0000ff, 0xff0000ff, 0xff0000ff, 0x0000ffff, 0x0000ffff, 0xff0000ff, 0xff0000ff, 0xff0000ff],
+  [0xff0000ff, 0xff0000ff, 0xff0000ff, 0x0000ffff, 0x0000ffff, 0xff0000ff, 0xff0000ff, 0xff0000ff],
 ];
 
-console.log(launchpad);
-const ERROR_TITS_URL =
-	"http://www.sexytitflash.com/bigimages/very%20big%20tits%2092619412%20153.jpg";
+const argv = yargs(hideBin(process.argv))
+  .usage('Usage: $0 [options]')
+  .option('p', {
+    alias: 'path',
+    demandOption: false,
+    describe: 'The location of the pad mapping file',
+    type: 'string',
+  })
+  .help('h')
+  .alias('h', 'help').argv;
 
-enum BUTTONS {
-  SUBMIT = 98,
-  CLEAR = 19,
-  KEYBOARD = 97,
-  MOUSE = 96,
-}
+console.log(argv);
 
-let mode: 'keyboard' | 'mouse' = 'keyboard';
+const ERROR_TITS_URL = 'http://www.sexytitflash.com/bigimages/very%20big%20tits%2092619412%20153.jpg';
 
 const currentColor = 5;
 
@@ -56,42 +66,60 @@ const compareGrid = (grid1, grid2) => {
 };
 
 launchpad.on('buttonDown', async (event) => {
-  console.log(event);
   const { pad, type } = event;
 
   if (type == 'pad') {
-    if (mode == 'keyboard') {
-      // Do keyboard stuff
+    switch (mode.currentMode) {
+      case MODE.keyboard: {
+        // Do keyboard stuff
+        const coord = event.cor;
+        const y = coord[0] - 1;
+        const x = coord[1] - 1;
+        grid[7 - y][x] = !grid[7 - y][x];
+
+        togglePad(event.arrayIndex, pad);
+        break;
+      }
+      case MODE.mouse: {
+        // Do mouse stuff
+        mouse.moveToCell(event.cor);
+        break;
+      }
+      case MODE.custom: {
+        // Do custom stuff
+        break;
+      }
+
+      default: {
+        break;
+      }
     }
-
-    if (mode == 'mouse') {
-      // Do mouse stuff
-    }
-
-    const coord = event.cor;
-    const y = coord[0] - 1;
-    const x = coord[1] - 1;
-    grid[7 - y][x] = !grid[7 - y][x];
-
-    togglePad(event.arrayIndex, pad);
   }
+
+  if (pad === BUTTONS.UP) mouse.move(0, 10);
+  if (pad === BUTTONS.DOWN) mouse.move(0, -10);
+  if (pad === BUTTONS.LEFT) mouse.move(-10, 0);
+  if (pad === BUTTONS.RIGHT) mouse.move(10, 0);
+
+  if (pad === BUTTONS.MOUSE_LEFT) mouse.click('left');
+  if (pad === BUTTONS.MOUSE_RIGHT) mouse.click('right');
 
   if (pad == BUTTONS.SUBMIT) {
     matprint(grid);
 
-    const image = new Jimp(8,8, function (err, image) {
+    const image = new Jimp(8, 8, function (err, image) {
       if (err) throw err;
-    
+
       grid.forEach((row, y) => {
         row.forEach((color, x) => {
-          color = color ? 0xFF0000FF : 0x0000FFFF;
+          color = color ? 0xff0000ff : 0x0000ffff;
           image.setPixelColor(color, x, y);
-        })
-      })
-    
+        });
+      });
+
       image.write('test.png', (err) => {
         if (err) throw err;
-      })
+      });
     });
 
     const match = compareGrid(grid, testChar);
@@ -111,25 +139,20 @@ launchpad.on('buttonDown', async (event) => {
     grid = generateGrid();
     launchpad.led.clear();
     setupPad();
-    await terminalArt.print(
-      ERROR_TITS_URL,
-      { 
-        output: 'log', 
-        maxCharWidth: 60 
-      }
-    );
+    await terminalArt.print(ERROR_TITS_URL, {
+      output: 'log',
+      maxCharWidth: 60,
+    });
   }
 
   if (pad == BUTTONS.KEYBOARD) {
-    mode = 'keyboard';
-    launchpad.led.pulse(BUTTONS.KEYBOARD, 5);
-    launchpad.led.off(BUTTONS.MOUSE);
+    mode.changeMode(MODE.keyboard);
   }
-
   if (pad == BUTTONS.MOUSE) {
-    mode = 'mouse';
-    launchpad.led.pulse(BUTTONS.MOUSE, 5);
-    launchpad.led.off(BUTTONS.KEYBOARD);
+    mode.changeMode(MODE.mouse);
+  }
+  if (pad === BUTTONS.CUSTOM) {
+    mode.changeMode(MODE.custom);
   }
 });
 

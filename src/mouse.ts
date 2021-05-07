@@ -1,4 +1,4 @@
-import { getMousePos, getScreenSize, moveMouseSmooth } from 'robotjs';
+import { getMousePos, getScreenSize, moveMouseSmooth, mouseClick } from 'robotjs';
 
 type MousePosition = {
   x: number;
@@ -19,14 +19,14 @@ export default class Mouse {
   public move(x: number, y: number): void {
     const newMousePos = {
       x: this.currentPosition.x + x,
-      y: this.currentPosition.y + y,
+      y: this.currentPosition.y - y,
     };
     moveMouseSmooth(newMousePos.x, newMousePos.y);
     this.currentPosition = newMousePos;
   }
 
   public moveTo(newPosition: MousePosition): void {
-    moveMouseSmooth(newPosition.x, newPosition.y);
+    moveMouseSmooth(newPosition.x, newPosition.y, 1);
     this.currentPosition = newPosition;
   }
 
@@ -39,9 +39,16 @@ export default class Mouse {
 
     const screenSize = getScreenSize();
 
-    const x = (screenSize.width / 8) * cell[0];
-    const y = (screenSize.height / 8) * cell[1];
+    const blockHeight = screenSize.height / 8;
+    const blockWidth = screenSize.width / 8;
+
+    const x = blockWidth * cell[1] - blockWidth / 2;
+    const y = screenSize.height - (blockHeight * cell[0] - blockHeight / 2);
 
     this.moveTo({ x, y });
+  }
+
+  public click(button: 'left' | 'right' | 'middle', double?: boolean): void {
+    mouseClick(button, double);
   }
 }
