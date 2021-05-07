@@ -64,6 +64,7 @@ launchpad.on('buttonDown', (event) => {
   }
 
   if (pad == 98) {
+    matprint(grid);
     const match = compareGrid(grid, testChar);
 
     if (match) {
@@ -84,3 +85,25 @@ launchpad.connect(1, 1);
 const togglePad = (arrayIndex, pad) => {
   launchpad.led.keys[arrayIndex].color > 0 ? launchpad.led.off(pad) : launchpad.led.on(pad, currentColor);
 };
+
+console.log(
+  "@@@ @@@@@@@  @@  @@@@@@       @@@@@@       @@@@@@@@@@   @@@@@@  @@@@@@@  @@@@@@@ @@@  @@@ @@@\n@@!   @@!   !@  !@@          @@!  @@@      @@! @@! @@! @@!  @@@   @@!   !@@      @@!  @@@ @@@\n!!@   @!!        !@@!!       @!@!@!@!      @!! !!@ @!@ @!@!@!@!   @!!   !@!      @!@!@!@! !@!\n!!:   !!:           !:!      !!:  !!!      !!:     !!: !!:  !!!   !!:   :!!      !!:  !!!    \n:      :        ::.: :        :   : :       :      :    :   : :    :     :: :: :  :   : : :.:\n                                                                                             \n",
+);
+
+const matprint = (grid) => {
+  const mat = grid.map(row => row.map(value => value ? 'X' : '.'));
+  const shape = [mat.length, mat[0].length];
+  function col(mat, i) {
+      return mat.map(row => row[i]);
+  }
+  const colMaxes = [];
+  for (let i = 0; i < shape[1]; i++) {
+      colMaxes.push(Math.max.apply(null, col(mat, i).map(n => n.toString().length)));
+  }
+
+  mat.forEach(row => {
+      console.log.apply(null, row.map((val, j) => {
+          return new Array(colMaxes[j]-val.toString().length+1).join(" ") + val.toString() + "  ";
+      }));
+  });
+}
