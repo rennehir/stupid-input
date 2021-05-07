@@ -61,6 +61,7 @@ launchpad.on('buttonDown', (event) => {
   }
 
   if (pad == 98) {
+    matprint(grid);
     const match = compareGrid(grid, testChar);
 
     if (match) {
@@ -86,7 +87,8 @@ console.log(
   "@@@ @@@@@@@  @@  @@@@@@       @@@@@@       @@@@@@@@@@   @@@@@@  @@@@@@@  @@@@@@@ @@@  @@@ @@@\n@@!   @@!   !@  !@@          @@!  @@@      @@! @@! @@! @@!  @@@   @@!   !@@      @@!  @@@ @@@\n!!@   @!!        !@@!!       @!@!@!@!      @!! !!@ @!@ @!@!@!@!   @!!   !@!      @!@!@!@! !@!\n!!:   !!:           !:!      !!:  !!!      !!:     !!: !!:  !!!   !!:   :!!      !!:  !!!    \n:      :        ::.: :        :   : :       :      :    :   : :    :     :: :: :  :   : : :.:\n                                                                                             \n",
 );
 
-const matprint = (mat) => {
+const matprint = (grid) => {
+  const mat = grid.map(row => row.map(value => value ? 'X' : '.'));
   const shape = [mat.length, mat[0].length];
   function col(mat, i) {
       return mat.map(row => row[i]);
@@ -102,61 +104,3 @@ const matprint = (mat) => {
       }));
   });
 }
-
-const inputRaw = [
-  [
-    false, false,
-    true,  true,
-    true,  false,
-    false, false
-  ],
-  [
-    false, false,
-    true,  false,
-    true,  false,
-    false, false
-  ],
-  [
-    false, false,
-    true,  false,
-    false, true,
-    false, false
-  ],
-  [
-    false, false,
-    false, false,
-    false, true,
-    false, false
-  ],
-  [
-    true,  false,
-    false, false,
-    false, true,
-    false, false
-  ],
-  [
-    true,  false,
-    false, false,
-    false, true,
-    false, false
-  ],
-  [
-    true,  false,
-    false, false,
-    true,  false,
-    false, false
-  ],
-  [
-    true,  true,
-    true,  true,
-    true,  false,
-    false, false
-  ]
-]
-
-const grid2 = inputRaw.map(row => row)
-
-const output = grid2.map(row => row.map(value => value ? 'X' : '.'));
-
-
-matprint(output)
