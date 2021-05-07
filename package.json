@@ -4,6 +4,7 @@
   "description": "Stupid input device for a computer created at the Stupid Hack 2021",
   "main": "index.js",
   "scripts": {
+    "start": "node src/index.ts",
     "test": "echo \"Error: no testing needed because we know how to code\" && exit 1",
     "build": "tsc",
     "lint": "eslint src/**/*.ts",
