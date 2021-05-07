@@ -38,5 +38,8 @@
     "hooks": {
       "pre-commit": "yarn lint"
     }
+  },
+  "dependencies": {
+    "launchpadder": "github:Nolux/Launchpadder#master"
   }
 }
