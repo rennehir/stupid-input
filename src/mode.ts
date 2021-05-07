@@ -18,6 +18,7 @@ export default class Mode {
   public changeMode(mode: MODE): void {
     this.currentMode = mode;
     this.setModeLights(mode);
+    console.log('changed to mode', MODE[mode]);
   }
 
   private setModeLights(mode: MODE): void {
