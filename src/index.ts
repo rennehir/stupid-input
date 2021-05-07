@@ -14,20 +14,6 @@ const testChar = [
   [0xFF0000FF, 0xFF0000FF, 0xFF0000FF, 0x0000FFFF, 0x0000FFFF, 0xFF0000FF, 0xFF0000FF, 0xFF0000FF],
 ];
 
-const image = new Jimp(8,8, function (err, image) {
-  if (err) throw err;
-
-  testChar.forEach((row, y) => {
-    row.forEach((color, x) => {
-      image.setPixelColor(color, x, y);
-    })
-  })
-
-  image.write('test.png', (err) => {
-    if (err) throw err;
-  })
-});
-
 console.log(launchpad);
 
 const currentColor = 5;
@@ -77,6 +63,22 @@ launchpad.on('buttonDown', (event) => {
 
   if (pad == 98) {
     matprint(grid);
+
+    const image = new Jimp(8,8, function (err, image) {
+      if (err) throw err;
+    
+      grid.forEach((row, y) => {
+        row.forEach((color, x) => {
+          color = color ? 0xFF0000FF : 0x0000FFFF;
+          image.setPixelColor(color, x, y);
+        })
+      })
+    
+      image.write('test.png', (err) => {
+        if (err) throw err;
+      })
+    });
+
     const match = compareGrid(grid, testChar);
 
     if (match) {
