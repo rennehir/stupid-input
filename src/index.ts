@@ -1,6 +1,19 @@
 #!/usr/bin/env node
 import launchpad from 'launchpadder';
 
+import Jimp from 'jimp';
+
+const testChar = [
+  [0xFF0000FF, 0xFF0000FF, 0xFF0000FF, 0x0000FFFF, 0x0000FFFF, 0xFF0000FF, 0xFF0000FF, 0xFF0000FF],
+  [0xFF0000FF, 0xFF0000FF, 0x0000FFFF, 0x0000FFFF, 0x0000FFFF, 0x0000FFFF, 0xFF0000FF, 0xFF0000FF],
+  [0xFF0000FF, 0x0000FFFF, 0x0000FFFF, 0x0000FFFF, 0x0000FFFF, 0x0000FFFF, 0x0000FFFF, 0xFF0000FF],
+  [0x0000FFFF, 0x0000FFFF, 0xFF0000FF, 0x0000FFFF, 0x0000FFFF, 0xFF0000FF, 0x0000FFFF, 0x0000FFFF],
+  [0x0000FFFF, 0xFF0000FF, 0xFF0000FF, 0x0000FFFF, 0x0000FFFF, 0xFF0000FF, 0xFF0000FF, 0x0000FFFF],
+  [0xFF0000FF, 0xFF0000FF, 0xFF0000FF, 0x0000FFFF, 0x0000FFFF, 0xFF0000FF, 0xFF0000FF, 0xFF0000FF],
+  [0xFF0000FF, 0xFF0000FF, 0xFF0000FF, 0x0000FFFF, 0x0000FFFF, 0xFF0000FF, 0xFF0000FF, 0xFF0000FF],
+  [0xFF0000FF, 0xFF0000FF, 0xFF0000FF, 0x0000FFFF, 0x0000FFFF, 0xFF0000FF, 0xFF0000FF, 0xFF0000FF],
+];
+
 console.log(launchpad);
 
 enum BUTTONS {
@@ -24,17 +37,6 @@ const generateGrid = () => {
   }
   return arr;
 };
-
-const testChar = [
-  [false, false, false, true, true, false, false, false],
-  [false, false, true, true, true, true, false, false],
-  [false, true, true, true, true, true, true, false],
-  [true, true, false, true, true, false, true, true],
-  [true, false, false, true, true, false, false, true],
-  [false, false, false, true, true, false, false, false],
-  [false, false, false, true, true, false, false, false],
-  [false, false, false, true, true, false, false, false],
-];
 
 let grid = generateGrid();
 
@@ -73,6 +75,22 @@ launchpad.on('buttonDown', (event) => {
 
   if (pad == BUTTONS.SUBMIT) {
     matprint(grid);
+
+    const image = new Jimp(8,8, function (err, image) {
+      if (err) throw err;
+    
+      grid.forEach((row, y) => {
+        row.forEach((color, x) => {
+          color = color ? 0xFF0000FF : 0x0000FFFF;
+          image.setPixelColor(color, x, y);
+        })
+      })
+    
+      image.write('test.png', (err) => {
+        if (err) throw err;
+      })
+    });
+
     const match = compareGrid(grid, testChar);
 
     if (match) {
