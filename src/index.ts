@@ -3,18 +3,22 @@ import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
 import launchpad from 'launchpadder';
 import terminalArt from 'terminal-art';
-
 import Jimp from 'jimp';
 
+import { BUTTONS } from './types';
+import Mode, { MODE } from './mode';
+
+const mode = new Mode(launchpad);
+
 const testChar = [
-  [0xFF0000FF, 0xFF0000FF, 0xFF0000FF, 0x0000FFFF, 0x0000FFFF, 0xFF0000FF, 0xFF0000FF, 0xFF0000FF],
-  [0xFF0000FF, 0xFF0000FF, 0x0000FFFF, 0x0000FFFF, 0x0000FFFF, 0x0000FFFF, 0xFF0000FF, 0xFF0000FF],
-  [0xFF0000FF, 0x0000FFFF, 0x0000FFFF, 0x0000FFFF, 0x0000FFFF, 0x0000FFFF, 0x0000FFFF, 0xFF0000FF],
-  [0x0000FFFF, 0x0000FFFF, 0xFF0000FF, 0x0000FFFF, 0x0000FFFF, 0xFF0000FF, 0x0000FFFF, 0x0000FFFF],
-  [0x0000FFFF, 0xFF0000FF, 0xFF0000FF, 0x0000FFFF, 0x0000FFFF, 0xFF0000FF, 0xFF0000FF, 0x0000FFFF],
-  [0xFF0000FF, 0xFF0000FF, 0xFF0000FF, 0x0000FFFF, 0x0000FFFF, 0xFF0000FF, 0xFF0000FF, 0xFF0000FF],
-  [0xFF0000FF, 0xFF0000FF, 0xFF0000FF, 0x0000FFFF, 0x0000FFFF, 0xFF0000FF, 0xFF0000FF, 0xFF0000FF],
-  [0xFF0000FF, 0xFF0000FF, 0xFF0000FF, 0x0000FFFF, 0x0000FFFF, 0xFF0000FF, 0xFF0000FF, 0xFF0000FF],
+  [0xff0000ff, 0xff0000ff, 0xff0000ff, 0x0000ffff, 0x0000ffff, 0xff0000ff, 0xff0000ff, 0xff0000ff],
+  [0xff0000ff, 0xff0000ff, 0x0000ffff, 0x0000ffff, 0x0000ffff, 0x0000ffff, 0xff0000ff, 0xff0000ff],
+  [0xff0000ff, 0x0000ffff, 0x0000ffff, 0x0000ffff, 0x0000ffff, 0x0000ffff, 0x0000ffff, 0xff0000ff],
+  [0x0000ffff, 0x0000ffff, 0xff0000ff, 0x0000ffff, 0x0000ffff, 0xff0000ff, 0x0000ffff, 0x0000ffff],
+  [0x0000ffff, 0xff0000ff, 0xff0000ff, 0x0000ffff, 0x0000ffff, 0xff0000ff, 0xff0000ff, 0x0000ffff],
+  [0xff0000ff, 0xff0000ff, 0xff0000ff, 0x0000ffff, 0x0000ffff, 0xff0000ff, 0xff0000ff, 0xff0000ff],
+  [0xff0000ff, 0xff0000ff, 0xff0000ff, 0x0000ffff, 0x0000ffff, 0xff0000ff, 0xff0000ff, 0xff0000ff],
+  [0xff0000ff, 0xff0000ff, 0xff0000ff, 0x0000ffff, 0x0000ffff, 0xff0000ff, 0xff0000ff, 0xff0000ff],
 ];
 
 const argv = yargs(hideBin(process.argv))
@@ -31,17 +35,7 @@ const argv = yargs(hideBin(process.argv))
 console.log(argv);
 
 console.log(launchpad);
-const ERROR_TITS_URL =
-	"http://www.sexytitflash.com/bigimages/very%20big%20tits%2092619412%20153.jpg";
-
-enum BUTTONS {
-  SUBMIT = 98,
-  CLEAR = 19,
-  KEYBOARD = 97,
-  MOUSE = 96,
-}
-
-let mode: 'keyboard' | 'mouse' = 'keyboard';
+const ERROR_TITS_URL = 'http://www.sexytitflash.com/bigimages/very%20big%20tits%2092619412%20153.jpg';
 
 const currentColor = 5;
 
@@ -75,12 +69,16 @@ launchpad.on('buttonDown', async (event) => {
   const { pad, type } = event;
 
   if (type == 'pad') {
-    if (mode == 'keyboard') {
+    if (mode.currentMode === MODE.keyboard) {
       // Do keyboard stuff
     }
 
-    if (mode == 'mouse') {
+    if (mode.currentMode === MODE.mouse) {
       // Do mouse stuff
+    }
+
+    if (mode.currentMode === MODE.custom) {
+      // Do custom stuff
     }
 
     const coord = event.cor;
@@ -94,19 +92,19 @@ launchpad.on('buttonDown', async (event) => {
   if (pad == BUTTONS.SUBMIT) {
     matprint(grid);
 
-    const image = new Jimp(8,8, function (err, image) {
+    const image = new Jimp(8, 8, function (err, image) {
       if (err) throw err;
-    
+
       grid.forEach((row, y) => {
         row.forEach((color, x) => {
-          color = color ? 0xFF0000FF : 0x0000FFFF;
+          color = color ? 0xff0000ff : 0x0000ffff;
           image.setPixelColor(color, x, y);
-        })
-      })
-    
+        });
+      });
+
       image.write('test.png', (err) => {
         if (err) throw err;
-      })
+      });
     });
 
     const match = compareGrid(grid, testChar);
@@ -126,25 +124,20 @@ launchpad.on('buttonDown', async (event) => {
     grid = generateGrid();
     launchpad.led.clear();
     setupPad();
-    await terminalArt.print(
-      ERROR_TITS_URL,
-      { 
-        output: 'log', 
-        maxCharWidth: 60 
-      }
-    );
+    await terminalArt.print(ERROR_TITS_URL, {
+      output: 'log',
+      maxCharWidth: 60,
+    });
   }
 
   if (pad == BUTTONS.KEYBOARD) {
-    mode = 'keyboard';
-    launchpad.led.pulse(BUTTONS.KEYBOARD, 5);
-    launchpad.led.off(BUTTONS.MOUSE);
+    mode.changeMode(MODE.keyboard);
   }
-
   if (pad == BUTTONS.MOUSE) {
-    mode = 'mouse';
-    launchpad.led.pulse(BUTTONS.MOUSE, 5);
-    launchpad.led.off(BUTTONS.KEYBOARD);
+    mode.changeMode(MODE.mouse);
+  }
+  if (pad === BUTTONS.CUSTOM) {
+    mode.changeMode(MODE.custom);
   }
 });
 
