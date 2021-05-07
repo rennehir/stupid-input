@@ -3,6 +3,15 @@ import launchpad from 'launchpadder';
 
 console.log(launchpad);
 
+enum BUTTONS {
+  SUBMIT = 98,
+  CLEAR = 19,
+  KEYBOARD = 97,
+  MOUSE = 96,
+}
+
+const mouse = new Mouse();
+
 const currentColor = 5;
 
 const generateGrid = () => {
@@ -41,16 +50,12 @@ const compareGrid = (grid1, grid2) => {
   return true;
 };
 
-launchpad.on('connected', (e) => {
-  // Setup panel
-  launchpad.led.clear();
-  launchpad.led.on(99, 22);
-});
-
 launchpad.on('buttonDown', (event) => {
   console.log(event);
   const { pad, type } = event;
+
   if (type == 'pad') {
+    // Handle pad press
     const coord = event.cor;
     const y = coord[0] - 1;
     const x = coord[1] - 1;
@@ -59,9 +64,11 @@ launchpad.on('buttonDown', (event) => {
     togglePad(event.arrayIndex, pad);
   }
 
-  if (pad == 98) {
+  if (pad == BUTTONS.SUBMIT) {
     matprint(grid);
     const match = compareGrid(grid, testChar);
+
+    console.log(launchpad.led.keys);
 
     if (match) {
       console.log(
@@ -70,9 +77,14 @@ launchpad.on('buttonDown', (event) => {
     }
   }
 
-  if (pad == 91) {
+  if (pad == 29) {
+    setupPad();
+  }
+
+  if (pad == BUTTONS.CLEAR) {
     grid = generateGrid();
     launchpad.led.clear();
+    setupPad();
   }
 });
 
@@ -82,24 +94,33 @@ const togglePad = (arrayIndex, pad) => {
   launchpad.led.keys[arrayIndex].color > 0 ? launchpad.led.off(pad) : launchpad.led.on(pad, currentColor);
 };
 
-console.log(
-  "@@@ @@@@@@@  @@  @@@@@@       @@@@@@       @@@@@@@@@@   @@@@@@  @@@@@@@  @@@@@@@ @@@  @@@ @@@\n@@!   @@!   !@  !@@          @@!  @@@      @@! @@! @@! @@!  @@@   @@!   !@@      @@!  @@@ @@@\n!!@   @!!        !@@!!       @!@!@!@!      @!! !!@ @!@ @!@!@!@!   @!!   !@!      @!@!@!@! !@!\n!!:   !!:           !:!      !!:  !!!      !!:     !!: !!:  !!!   !!:   :!!      !!:  !!!    \n:      :        ::.: :        :   : :       :      :    :   : :    :     :: :: :  :   : : :.:\n                                                                                             \n",
-);
+const setupPad = () => {
+  launchpad.led.on(BUTTONS.SUBMIT, 66);
+  launchpad.led.on(BUTTONS.CLEAR, 3);
+};
 
 const matprint = (grid) => {
-  const mat = grid.map(row => row.map(value => value ? 'X' : '.'));
+  const mat = grid.map((row) => row.map((value) => (value ? 'X' : '.')));
   const shape = [mat.length, mat[0].length];
   function col(mat, i) {
-      return mat.map(row => row[i]);
+    return mat.map((row) => row[i]);
   }
   const colMaxes = [];
   for (let i = 0; i < shape[1]; i++) {
-      colMaxes.push(Math.max.apply(null, col(mat, i).map(n => n.toString().length)));
+    colMaxes.push(
+      Math.max.apply(
+        null,
+        col(mat, i).map((n) => n.toString().length),
+      ),
+    );
   }
 
-  mat.forEach(row => {
-      console.log.apply(null, row.map((val, j) => {
-          return new Array(colMaxes[j]-val.toString().length+1).join(" ") + val.toString() + "  ";
-      }));
+  mat.forEach((row) => {
+    console.log.apply(
+      null,
+      row.map((val, j) => {
+        return new Array(colMaxes[j] - val.toString().length + 1).join(' ') + val.toString() + '  ';
+      }),
+    );
   });
-}
+};
