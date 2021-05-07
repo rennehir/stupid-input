@@ -1,12 +1,14 @@
 {
-  "compilerOptions":
-    {
-      "target": "es2018",
-      "module": "commonjs",
-      "outDir": "dist",
-      "sourceMap": true,
-      "declaration": true
-    },
+  "compilerOptions": {
+    "baseUrl": "src",
+    "target": "es5",
+    "module": "commonjs",
+    "sourceMap": true,
+    "declaration": true,
+    "esModuleInterop": true,
+    "rootDir": "src",
+    "outDir": "dist",
+  },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]
 }
