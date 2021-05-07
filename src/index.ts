@@ -36,7 +36,6 @@ const argv = yargs(hideBin(process.argv))
 
 console.log(argv);
 
-console.log(launchpad);
 const ERROR_TITS_URL = 'http://www.sexytitflash.com/bigimages/very%20big%20tits%2092619412%20153.jpg';
 
 const currentColor = 5;
