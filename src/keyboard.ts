@@ -1,4 +1,5 @@
 import { keyTap, typeString } from 'robotjs';
+import Launchpad from 'launchpadder';
 
 import { BUTTONS, KEY, MODIFIER } from './types';
 
@@ -10,9 +11,9 @@ export interface IKeyboard {
 
 export default class Keyboard implements IKeyboard {
   private modifiers: MODIFIER[] = [];
-  private launchpad;
+  private launchpad: Launchpad;
 
-  constructor(launchpad) {
+  constructor(launchpad: Launchpad) {
     this.launchpad = launchpad;
   }
 

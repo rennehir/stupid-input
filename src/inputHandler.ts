@@ -1,10 +1,13 @@
 import Jimp from 'jimp';
 import terminalArt from 'terminal-art';
+import Launchpad from 'launchpadder';
 
 import { BUTTONS, MODE } from './types';
 import { recognize } from './recognize';
 
 import { IKeyboard } from './keyboard';
+import Mode from './mode';
+import Mouse from './mouse';
 
 const ERROR_TITS_URL = 'http://www.sexytitflash.com/bigimages/very%20big%20tits%2092619412%20153.jpg';
 
@@ -18,14 +21,14 @@ type Event = {
 };
 
 export default class InputHandler {
-  private launchpad;
-  private mouse;
+  private launchpad: Launchpad;
+  private mouse: Mouse;
   private keyboard: IKeyboard;
-  private mode;
+  private mode: Mode;
   private grid: Grid;
   private currentColor = 5;
 
-  constructor(launchpad, mouse, keyboard: IKeyboard, mode) {
+  constructor(launchpad: Launchpad, mouse: Mouse, keyboard: IKeyboard, mode: Mode) {
     this.launchpad = launchpad;
     this.mouse = mouse;
     this.keyboard = keyboard;
@@ -124,7 +127,7 @@ export default class InputHandler {
 
   private submit(grid: Grid): void {
     this.matprint(grid);
-    const image = new Jimp(8, 8, (err, image) => {
+    new Jimp(8, 8, (err, image) => {
       if (err) throw err;
       grid.forEach((row, y) => {
         row.forEach((cell, x) => {

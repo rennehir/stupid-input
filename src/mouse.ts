@@ -1,4 +1,5 @@
 import { dragMouse, getMousePos, getScreenSize, moveMouseSmooth, mouseClick, mouseToggle } from 'robotjs';
+import Launchpad from 'launchpadder';
 
 import { BUTTONS } from './types';
 
@@ -10,9 +11,9 @@ type MousePosition = {
 export default class Mouse {
   private currentPosition: MousePosition;
   private isDragging: boolean;
-  private launchpad;
+  private launchpad: Launchpad;
 
-  constructor(launchpad) {
+  constructor(launchpad: Launchpad) {
     this.launchpad = launchpad;
     this.currentPosition = getMousePos();
   }
