@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Set up GCC
         uses: egor-tensin/setup-gcc@v1
-      - name: Install ALSA dev
+      - name: Install dependencies for midi and robotjs libraries
         run: |
           sudo apt-get update
           sudo apt-get install alsa libasound2-dev libxtst-dev libpng++-dev
@@ -27,9 +27,9 @@ jobs:
         with:
           python-version: '3.8.5'
       - name: Install dependencies
-        run: rm package-lock.json
-      - run: npm install
-      - run: npm run build
+        run: npm install
+      - name: Build
+        run: npm run build
       - name: Release
         uses: mikeal/merge-release@master
         env:
