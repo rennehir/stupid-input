@@ -1,7 +1,7 @@
 import Jimp from 'jimp';
 import terminalArt from 'terminal-art';
 
-import { BUTTONS, MODE } from './types';
+import { BUTTONS, MODE, KEYS } from './types';
 import { recognize } from './recognize';
 
 const ERROR_TITS_URL = 'http://www.sexytitflash.com/bigimages/very%20big%20tits%2092619412%20153.jpg';
@@ -18,13 +18,15 @@ type Event = {
 export default class InputHandler {
   private launchpad;
   private mouse;
+  private keyboard;
   private mode;
   private grid: Grid;
   private currentColor = 5;
 
-  constructor(launchpad, mouse, mode) {
+  constructor(launchpad, mouse, keyboard, mode) {
     this.launchpad = launchpad;
     this.mouse = mouse;
+    this.keyboard = keyboard;
     this.mode = mode;
     this.grid = this.generateGrid();
   }
@@ -103,7 +105,7 @@ export default class InputHandler {
 
   private submit(grid: Grid): void {
     this.matprint(grid);
-    const image = new Jimp(8, 8, function (err, image) {
+    const image = new Jimp(8, 8, (err, image) => {
       if (err) throw err;
       grid.forEach((row, y) => {
         row.forEach((cell, x) => {
@@ -116,7 +118,12 @@ export default class InputHandler {
         if (err) throw err;
         // Get the result here
         const result = await recognize();
-        result === '' ? console.log('Could not recognize input!') : console.log('Result', result);
+        if (result === '') {
+          console.log('Could not recognize input!');
+        } else {
+          this.keyboard.type(result);
+          console.log('Result', result);
+        }
       });
     });
   }

@@ -6,11 +6,13 @@ import launchpad from 'launchpadder';
 import InputHandler from './inputHandler';
 import Mode from './mode';
 import Mouse from './mouse';
+import Keyboard from './keyboard';
 import { initializeWorker } from './recognize';
 
 const mode = new Mode(launchpad);
 const mouse = new Mouse();
-const handler = new InputHandler(launchpad, mouse, mode);
+const keyboard = new Keyboard();
+const handler = new InputHandler(launchpad, mouse, keyboard, mode);
 initializeWorker();
 
 const argv = yargs(hideBin(process.argv))
