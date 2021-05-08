@@ -13,7 +13,7 @@ jobs:
       - name: Install ALSA dev
         run: |
           sudo apt-get update
-          sudo apt-get install alsa libasound2-dev
+          sudo apt-get install alsa libasound2-dev libxtst-dev libpng++-dev
       - name: Checkout
         uses: actions/checkout@v2
         with:
