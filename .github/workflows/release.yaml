@@ -28,7 +28,7 @@ jobs:
           python-version: '3.8.5'
       - name: Install dependencies
         run: rm package-lock.json
-        run: npm install
+      - run: npm install
       - run: npm run build
       - name: Release
         uses: mikeal/merge-release@master
