@@ -7,8 +7,9 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    compiler: gcc
     steps:
+      - name: Set up GCC
+        uses: egor-tensin/setup-gcc@v1
       - name: Install ALSA dev
         run: |
           sudo apt-get update
