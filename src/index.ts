@@ -1,6 +1,4 @@
 #!/usr/bin/env node
-import yargs from 'yargs/yargs';
-import { hideBin } from 'yargs/helpers';
 import launchpad from 'launchpadder';
 
 import InputHandler from './inputHandler';
@@ -14,19 +12,6 @@ const mouse = new Mouse(launchpad);
 const keyboard = new Keyboard(launchpad);
 const handler = new InputHandler(launchpad, mouse, keyboard, mode);
 initializeWorker();
-
-const argv = yargs(hideBin(process.argv))
-  .usage('Usage: $0 [options]')
-  .option('p', {
-    alias: 'path',
-    demandOption: false,
-    describe: 'The location of the pad mapping file',
-    type: 'string',
-  })
-  .help('h')
-  .alias('h', 'help').argv;
-
-console.log(argv);
 
 launchpad.on('buttonDown', async (event) => {
   const { pad, type } = event;
