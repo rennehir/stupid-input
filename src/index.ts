@@ -5,10 +5,23 @@ import launchpad from 'launchpadder';
 import terminalArt from 'terminal-art';
 import Jimp from 'jimp';
 
+import * as fs from 'fs';
+import * as PNG from 'pngjs';
+import Waifu2x from './Waifu2x'
+
 import { BUTTONS } from './types';
 import Mode, { MODE } from './mode';
 import Mouse from './mouse';
 import { recognize } from './recognize';
+
+import {model} from './scale2.0x_model';
+
+const waifu2x = new Waifu2x({
+  scale2xModel: model,
+  noiseModel: null,
+  scale: 2,
+});
+
 
 const mode = new Mode(launchpad);
 const mouse = new Mouse();
@@ -118,11 +131,22 @@ launchpad.on('buttonDown', async (event) => {
         });
       });
 
-      image.resize(28, 28).write('test.png', async (err) => {
+      image.write('test.png', async (err) => {
         if (err) throw err;
         // Get the result here
         const result = await recognize();
         console.log('Result', result);
+      });
+      waifu2x.calc(image, 8, 8, function(image2x, width, height) {
+        const img = new PNG.PNG({width, height})
+        img.data = Buffer.from(image2x);
+        console.log(img);
+        img.pack().pipe(fs.createWriteStream('test2x.png'));
+        /* writeFile('./test2x.png', Buffer.from(image2x), err => {
+          console.log(err);
+        }); */
+      }, function(phase, doneRatio, allBlocks, doneBlocks) {
+          console.log(doneRatio);
       });
     });
 
