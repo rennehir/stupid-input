@@ -1,10 +1,12 @@
+import Launchpad from 'launchpadder';
+
 import { BUTTONS, MODE } from './types';
 
 export default class Mode {
   public currentMode: MODE;
-  private launchpad;
+  private launchpad: Launchpad;
 
-  constructor(launchpad) {
+  constructor(launchpad: Launchpad) {
     this.launchpad = launchpad;
     this.currentMode = MODE.keyboard;
   }

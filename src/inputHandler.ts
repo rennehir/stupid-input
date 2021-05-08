@@ -1,8 +1,13 @@
 import Jimp from 'jimp';
 import terminalArt from 'terminal-art';
+import Launchpad from 'launchpadder';
 
-import { BUTTONS, MODE, KEYS } from './types';
+import { BUTTONS, MODE } from './types';
 import { recognize } from './recognize';
+
+import { IKeyboard } from './keyboard';
+import Mode from './mode';
+import Mouse from './mouse';
 
 const ERROR_TITS_URL = 'http://www.sexytitflash.com/bigimages/very%20big%20tits%2092619412%20153.jpg';
 
@@ -16,14 +21,14 @@ type Event = {
 };
 
 export default class InputHandler {
-  private launchpad;
-  private mouse;
-  private keyboard;
-  private mode;
+  private launchpad: Launchpad;
+  private mouse: Mouse;
+  private keyboard: IKeyboard;
+  private mode: Mode;
   private grid: Grid;
   private currentColor = 5;
 
-  constructor(launchpad, mouse, keyboard, mode) {
+  constructor(launchpad: Launchpad, mouse: Mouse, keyboard: IKeyboard, mode: Mode) {
     this.launchpad = launchpad;
     this.mouse = mouse;
     this.keyboard = keyboard;
@@ -89,6 +94,23 @@ export default class InputHandler {
         this.mouse.click('right');
         break;
 
+      case BUTTONS.MOUSE_DRAG:
+        this.mouse.toggleDragging();
+        break;
+
+      case BUTTONS.ALT:
+        this.keyboard.toggleModifier('alt');
+        break;
+      case BUTTONS.COMMAND:
+        this.keyboard.toggleModifier('command');
+        break;
+      case BUTTONS.CONTROL:
+        this.keyboard.toggleModifier('control');
+        break;
+      case BUTTONS.SHIFT:
+        this.keyboard.toggleModifier('shift');
+        break;
+
       case BUTTONS.SUBMIT:
         this.submit(this.grid);
         break;
@@ -105,7 +127,7 @@ export default class InputHandler {
 
   private submit(grid: Grid): void {
     this.matprint(grid);
-    const image = new Jimp(8, 8, (err, image) => {
+    new Jimp(8, 8, (err, image) => {
       if (err) throw err;
       grid.forEach((row, y) => {
         row.forEach((cell, x) => {
@@ -121,7 +143,8 @@ export default class InputHandler {
         if (result === '') {
           console.log('Could not recognize input!');
         } else {
-          this.keyboard.type(result);
+          const key = result.toLowerCase();
+          this.keyboard.tap(key);
           console.log('Result', result);
         }
       });

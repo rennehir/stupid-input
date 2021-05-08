@@ -10,8 +10,8 @@ import Keyboard from './keyboard';
 import { initializeWorker } from './recognize';
 
 const mode = new Mode(launchpad);
-const mouse = new Mouse();
-const keyboard = new Keyboard();
+const mouse = new Mouse(launchpad);
+const keyboard = new Keyboard(launchpad);
 const handler = new InputHandler(launchpad, mouse, keyboard, mode);
 initializeWorker();
 
