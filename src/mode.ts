@@ -1,10 +1,4 @@
-import { BUTTONS } from './types';
-
-export enum MODE {
-  keyboard,
-  mouse,
-  custom,
-}
+import { BUTTONS, MODE } from './types';
 
 export default class Mode {
   public currentMode: MODE;

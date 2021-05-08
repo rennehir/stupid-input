@@ -11,3 +11,9 @@ export enum BUTTONS {
   MOUSE_LEFT = 89,
   MOUSE_RIGHT = 79,
 }
+
+export enum MODE {
+  keyboard,
+  mouse,
+  custom,
+}
