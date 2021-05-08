@@ -8,18 +8,10 @@ import Jimp from 'jimp';
 import { BUTTONS } from './types';
 import Mode, { MODE } from './mode';
 import Mouse from './mouse';
+import { recognize } from './recognize';
 
 const mode = new Mode(launchpad);
 const mouse = new Mouse();
-
-import { createWorker } from 'tesseract.js';
-
-import path from 'path';
-
-const worker = createWorker({
-  langPath: path.join(__dirname, '..', 'lang-data'),
-  logger: (m) => console.log(m),
-});
 
 const testChar = [
   [0xff0000ff, 0xff0000ff, 0xff0000ff, 0x0000ffff, 0x0000ffff, 0xff0000ff, 0xff0000ff, 0xff0000ff],
@@ -122,23 +114,16 @@ launchpad.on('buttonDown', async (event) => {
 
       grid.forEach((row, y) => {
         row.forEach((color, x) => {
-          color = color ? 0xff0000ff : 0x0000ffff;
+          color = color ? 0x000000ff : 0xffffffff;
           image.setPixelColor(color, x, y);
         });
       });
 
-      image.write('test.png', (err) => {
+      image.resize(28, 28).write('test.png', async (err) => {
         if (err) throw err;
-        (async () => {
-          await worker.load();
-          await worker.loadLanguage('eng');
-          await worker.initialize('eng');
-          const {
-            data: { text },
-          } = await worker.recognize(path.join(__dirname, '..', 'test.png'));
-          console.log('worker is done', text);
-          console.log(text);
-        })();
+        // Get the result here
+        const result = await recognize();
+        console.log('Result', result);
       });
     });
 
