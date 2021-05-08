@@ -18,11 +18,22 @@ First connect your [Novation Launchpad Mini MK3](https://novationmusic.com/en/la
 stupid-input
 ```
 
+## Built with
+
+- [Nolux/Launchpadder](https://github.com/Nolux/Launchpadder) for communicating with the device
+- [octalmage/robotjs](https://github.com/octalmage/robotjs) for commanding the computer
+- [naptha/tesseract.js](https://github.com/naptha/tesseract.js) for identifying letters from a pixelated image
+- [oliver-moran/jimp](https://github.com/oliver-moran/jimp) for creating pixelated images from the launchpad pixel matrix
+
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
-Please make sure to update tests as appropriate.
+~~Please make sure to update tests as appropriate.~~
+
+## Authors
+
+See also the list of [contributors](https://github.com/rennehir/stupid-input/graphs/contributors) who participated in this project.
 
 ## License
 
