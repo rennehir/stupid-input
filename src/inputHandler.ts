@@ -1,8 +1,10 @@
 import Jimp from 'jimp';
 import terminalArt from 'terminal-art';
 
-import { BUTTONS, MODE, KEYS } from './types';
+import { BUTTONS, MODE } from './types';
 import { recognize } from './recognize';
+
+import { IKeyboard } from './keyboard';
 
 const ERROR_TITS_URL = 'http://www.sexytitflash.com/bigimages/very%20big%20tits%2092619412%20153.jpg';
 
@@ -18,12 +20,12 @@ type Event = {
 export default class InputHandler {
   private launchpad;
   private mouse;
-  private keyboard;
+  private keyboard: IKeyboard;
   private mode;
   private grid: Grid;
   private currentColor = 5;
 
-  constructor(launchpad, mouse, keyboard, mode) {
+  constructor(launchpad, mouse, keyboard: IKeyboard, mode) {
     this.launchpad = launchpad;
     this.mouse = mouse;
     this.keyboard = keyboard;
@@ -89,6 +91,23 @@ export default class InputHandler {
         this.mouse.click('right');
         break;
 
+      case BUTTONS.MOUSE_DRAG:
+        this.mouse.toggleDragging();
+        break;
+
+      case BUTTONS.ALT:
+        this.keyboard.toggleModifier('alt');
+        break;
+      case BUTTONS.COMMAND:
+        this.keyboard.toggleModifier('command');
+        break;
+      case BUTTONS.CONTROL:
+        this.keyboard.toggleModifier('control');
+        break;
+      case BUTTONS.SHIFT:
+        this.keyboard.toggleModifier('shift');
+        break;
+
       case BUTTONS.SUBMIT:
         this.submit(this.grid);
         break;
@@ -121,7 +140,8 @@ export default class InputHandler {
         if (result === '') {
           console.log('Could not recognize input!');
         } else {
-          this.keyboard.type(result);
+          const key = result.toLowerCase();
+          this.keyboard.tap(key);
           console.log('Result', result);
         }
       });

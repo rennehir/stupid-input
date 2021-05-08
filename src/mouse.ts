@@ -1,4 +1,6 @@
-import { getMousePos, getScreenSize, moveMouseSmooth, mouseClick } from 'robotjs';
+import { dragMouse, getMousePos, getScreenSize, moveMouseSmooth, mouseClick, mouseToggle } from 'robotjs';
+
+import { BUTTONS } from './types';
 
 type MousePosition = {
   x: number;
@@ -7,8 +9,11 @@ type MousePosition = {
 
 export default class Mouse {
   private currentPosition: MousePosition;
+  private isDragging: boolean;
+  private launchpad;
 
-  constructor() {
+  constructor(launchpad) {
+    this.launchpad = launchpad;
     this.currentPosition = getMousePos();
   }
 
@@ -21,7 +26,11 @@ export default class Mouse {
       x: this.currentPosition.x + x,
       y: this.currentPosition.y - y,
     };
-    moveMouseSmooth(newMousePos.x, newMousePos.y);
+    if (this.isDragging) {
+      dragMouse(newMousePos.x, newMousePos.y);
+    } else {
+      moveMouseSmooth(newMousePos.x, newMousePos.y);
+    }
     this.currentPosition = newMousePos;
   }
 
@@ -50,5 +59,16 @@ export default class Mouse {
 
   public click(button: 'left' | 'right' | 'middle', double?: boolean): void {
     mouseClick(button, double);
+  }
+
+  public toggleDragging(): void {
+    this.isDragging = !this.isDragging;
+    if (this.isDragging) {
+      mouseToggle('down');
+      this.launchpad.led.on(BUTTONS.MOUSE_DRAG, 98);
+    } else {
+      mouseToggle('up');
+      this.launchpad.led.off(BUTTONS.MOUSE_DRAG);
+    }
   }
 }
