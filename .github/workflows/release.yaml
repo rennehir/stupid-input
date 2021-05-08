@@ -16,7 +16,11 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 14
+          node-version: 15
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '2.7.18'
+          architecture: 'x86'
       - name: Install dependencies
         run: npm install
       - run: npm run build
