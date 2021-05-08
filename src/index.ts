@@ -8,10 +8,11 @@ import Jimp from 'jimp';
 import { BUTTONS } from './types';
 import Mode, { MODE } from './mode';
 import Mouse from './mouse';
-import { recognize } from './recognize';
+import { recognize, initializeWorker } from './recognize';
 
 const mode = new Mode(launchpad);
 const mouse = new Mouse();
+initializeWorker();
 
 const testChar = [
   [0xff0000ff, 0xff0000ff, 0xff0000ff, 0x0000ffff, 0x0000ffff, 0xff0000ff, 0xff0000ff, 0xff0000ff],
@@ -118,11 +119,13 @@ launchpad.on('buttonDown', async (event) => {
         });
       });
 
-      image.resize(28, 28).write('test.png', async (err) => {
+      image
+      .resize(28, 28)
+      .write('test.png', async (err) => {
         if (err) throw err;
         // Get the result here
         const result = await recognize();
-        console.log('Result', result);
+        result === '' ? console.log('Could not recognize input!') : console.log('Result', result);
       });
     });
 

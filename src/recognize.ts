@@ -6,10 +6,17 @@ const worker = createWorker({
   logger: (m) => console.log(m),
 });
 
-export const recognize = async () => {
+export const initializeWorker = async () => {
+  console.log('initializing worker');
   await worker.load();
   await worker.loadLanguage('eng');
   await worker.initialize('eng');
+  await worker.setParameters({
+    tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+  });
+}
+
+export const recognize = async () => {
   const { data } = await worker.recognize(path.join(__dirname, '..', 'test.png'));
   //console.log('worker is done', data);
   const { text } = data;
