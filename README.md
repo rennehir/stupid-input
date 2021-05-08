@@ -20,6 +20,50 @@ First connect your [Novation Launchpad Mini MK3](https://novationmusic.com/en/la
 stupid-input
 ```
 
+## What do I have to press?
+
+### Mouse
+
+#### Moving
+
+The arrow buttons on the left side of the top row move the mouse a couple of pixels per press.
+
+#### Clicking
+
+Left click is the topmost button of the rightmost column. Right click is right below it.
+
+#### Dragging
+
+Below the right click button is the mouse drag button. If the light is on your mouse button is pressed and you can drag or select things.
+
+### Modifier keys
+
+In the rightmost column from fourth until seventh are the modifier keys in this order from top:
+
+1. alt
+2. command
+3. control
+4. shift
+
+They also toggle on press.
+
+### Choosing a mode
+
+There are two modes (third one maybe coming), keyboard and fast mouse.
+
+1. Fast mouse mode - top row, fifth button from left
+2. Keyboard mode - top row, seventh button from left
+
+### Modes
+
+#### Fast mouse mode
+
+Press a white pad, and the cursor moves to that area of the screen
+
+#### Keyboard mode
+
+Draw a letter with the lights and press submit button (top row, rightmost button). You can reset your drawing with the reset button (bottom right corner).
+
 ## Built with
 
 - [Nolux/Launchpadder](https://github.com/Nolux/Launchpadder) for communicating with the device
