@@ -8,6 +8,7 @@ import Jimp from 'jimp';
 import { BUTTONS } from './types';
 import Mode, { MODE } from './mode';
 import Mouse from './mouse';
+import { recognize } from './recognize';
 
 const mode = new Mode(launchpad);
 const mouse = new Mouse();
@@ -112,13 +113,16 @@ launchpad.on('buttonDown', async (event) => {
 
       grid.forEach((row, y) => {
         row.forEach((color, x) => {
-          color = color ? 0xff0000ff : 0x0000ffff;
+          color = color ? 0x000000ff : 0xffffffff;
           image.setPixelColor(color, x, y);
         });
       });
 
-      image.write('test.png', (err) => {
+      image.resize(28, 28).write('test.png', async (err) => {
         if (err) throw err;
+        // Get the result here
+        const result = await recognize();
+        console.log('Result', result);
       });
     });
 
