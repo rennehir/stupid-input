@@ -6,6 +6,8 @@ This project is created a a part of [StUpiD hAcK 2021 by Junction](https://app.h
 
 ![photo_2021-05-08_15-55-55](https://user-images.githubusercontent.com/24566763/117542143-17d1ce80-b020-11eb-9f8e-7617d60e470f.jpg)
 
+Demo video: https://vimeo.com/546880885
+
 ## Installation
 
 ```bash
